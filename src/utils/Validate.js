@@ -27,6 +27,11 @@ export function validatePass(value){
  * 验证验证码
  */
 export function validateVCode(value){
-    let reg = /^[a-z0-9]{6}$/;
+    let reg = /^[a-zA-Z0-9]{6}$/;
     return !reg.test(value);
 }
+
+/**
+ * 没有使用default时,可以同时声明多个export
+ * 文件import时需要{}括号
+ */
