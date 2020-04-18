@@ -18,7 +18,7 @@ service.interceptors.request.use(function (config) {
     //Tokey
     //userId
     // config.headers.Tokey='11111';
-    console.log(config)
+    // console.log(config)
     return config;
 }, function (error) {
     // 对请求错误做些什么

@@ -1,15 +1,16 @@
 <template>
-  <div>用户管理</div>
+  <div>信息首页</div>
 </template>
 
 <script>
 export default {
-  name: 'userIndex',
+  name: 'infoIndex',
   setup(props, { }) {
 
   },
 }
 </script>
 
-<style>
+<style lang="scss">
+
 </style>
