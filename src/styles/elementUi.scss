@@ -33,3 +33,42 @@ li.el-submenu {
         background-color: $mainColor !important;
     }
 }
+
+// table样式
+div.el-table {
+    td,
+    th {
+        text-align: center;
+    }
+    th {
+        font-weight: bold;
+        color: #344a5f;
+    }
+    td {
+        font-size: 14px;
+    }
+    .el-table-column--selection .cell {
+        padding-left: 12px;
+        padding-right: 12px;
+    }
+}
+
+// dialog 样式
+.el-dialog__body {
+    padding: 30px 47px;
+}
+.dialog-footer {
+    text-align: center !important;
+    padding-bottom: 20px !important;
+    .el-button {
+        width: 150px;
+        margin: 0 11px;
+    }
+}
+
+// dialog form表单
+.el-form {
+    .el-form-item:last-child {
+        margin-bottom: 0px !important;
+    }
+}

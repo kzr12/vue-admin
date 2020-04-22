@@ -4,6 +4,7 @@
             <i class="el-icon-menu" @click="navMenuState"></i>
         </div>
         <div class="pull-right">
+            <div class="imgbox pull-left"><img src="../../../assets/head.jpg" alt=""></div>
             <div class="user-info pull-left">{{username}}</div>
             <div class="pull-left header-icon">
                 <i class="el-icon-s-tools" @click="exit"></i>
@@ -75,7 +76,7 @@ export default {
     }
 }
 .user-info {
-    padding: 0 32px;
+    padding: 0 25px;
     height: 100%;
     border-right: 1px solid #ededed;
     + .header-icon {
@@ -90,6 +91,17 @@ export default {
 .close {
     #header-wrap {
         left: $navMenuMin;
+    }
+}
+.imgbox {
+    margin: 10px 0px;
+    width: 50px;
+    height: 50px;
+    overflow: hidden;
+    border-radius: 50%;
+    img{
+        width: 100%;
+        height: 100%;
     }
 }
 </style>

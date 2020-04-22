@@ -39,9 +39,8 @@ export default {
 }
 .content {
     width: 100%;
-    height: 100%;
-    padding-top: 30px;
-    padding-left: 30px;
+    height: auto;
+    padding: 30px;
     @include webkit(box-sizing, border-box);
     background: #fff;
 }
