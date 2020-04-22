@@ -41,6 +41,7 @@ export default {
         //data数据
         // const isCollapse = ref(false);
         const routers = reactive(root.$router.options.routes);
+
         /**
          * computer 监听
          */

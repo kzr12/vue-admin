@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { Message } from 'element-ui';
+import { getToken, getUserName } from './app';
 
 //创建axios service
 const BASEURL = process.env.NODE_ENV === 'production' ? '' : '/devApi';
@@ -17,8 +18,10 @@ service.interceptors.request.use(function (config) {
     //后台需要前端这边传相关的参数(在请求头添加参数)
     //Tokey
     //userId
-    // config.headers.Tokey='11111';
+    config.headers.Tokey = getToken();
+    config.headers.username = getUserName();
     // console.log(config)
+
     return config;
 }, function (error) {
     // 对请求错误做些什么

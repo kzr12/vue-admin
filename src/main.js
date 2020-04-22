@@ -8,6 +8,9 @@ import 'element-ui/lib/theme-chalk/index.css';
 
 //路由守卫
 import "./router/premit";
+//自定义全局方法
+// import global from "@/utils/global.js";
+// Vue.use(global);
 //自定义全局组件
 import "./icons/index";
 Vue.use(ElementUI);
