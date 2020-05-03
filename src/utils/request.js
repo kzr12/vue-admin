@@ -2,9 +2,9 @@ import axios from 'axios';
 import { Message } from 'element-ui';
 import { getToken, getUserName } from './app';
 
-//创建axios service
-const BASEURL = process.env.NODE_ENV === 'production' ? '' : '/devApi';
 
+const BASEURL = process.env.NODE_ENV === 'production' ? '' : '/devApi';
+//创建axios service
 const service = axios.create({
     baseURL: BASEURL,
     timeout: 15000,//超时

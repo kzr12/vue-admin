@@ -85,7 +85,7 @@
 <script>
 import { GetSms, Register, Login } from "@/api/login";
 import { stripscript, validateEmail, validatePass, validateVCode } from "@/utils/Validate";
-import { reactive, ref, isRef, onMounted } from "@vue/composition-api";
+import { reactive, ref, isRef, onMounted, onUnmounted } from "@vue/composition-api";
 import sha1 from "js-sha1";
 export default {
     name: "login",
@@ -227,7 +227,8 @@ export default {
                 countDown(60);
                 console.log(res.data)
             }).catch(err => {
-                console.log(err)
+                //启用登录或者注册按钮
+                loginBtn.value = false;
             });
 
 
@@ -257,11 +258,11 @@ export default {
             //登录接口
             Login(loginData).then(res => {
                 //保存token
-                context.root.$store.dispatch('app/save_Info',res.data);
+                context.root.$store.dispatch('app/save_Info', res.data);
                 //页面跳转
                 context.root.$router.push({
                     name: 'Console',
-                })
+                }, onComplete => { }, onAbort => { })
                 console.log('登录成功')
             });
         });
@@ -326,6 +327,15 @@ export default {
         onMounted(() => {
 
         });
+
+        /**
+         * 销毁页面时
+         */
+        onUnmounted(() => {
+            //销毁定时器
+            clearInterval(timer.value);
+        })
+
 
         return {
             menuTab,

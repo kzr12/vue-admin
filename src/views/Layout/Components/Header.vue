@@ -7,7 +7,7 @@
             <div class="imgbox pull-left"><img src="../../../assets/head.jpg" alt=""></div>
             <div class="user-info pull-left">{{username}}</div>
             <div class="pull-left header-icon">
-                <i class="el-icon-s-tools" @click="exit"></i>
+                <i class="el-icon-s-tools" @click="logout"></i>
             </div>
         </div>
     </div>
@@ -25,13 +25,13 @@ export default {
             return root.$store.commit('app/SET_COLLAPSE');
         }
         //退出的方法
-        const exit = (() => {
+        const logout = (() => {
             return root.$confirm('你确认要退出吗？', '提示', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
                 type: 'warning'
             }).then(() => {
-                root.$store.dispatch("app/exit").then(() => {
+                root.$store.dispatch("app/logout").then((res) => {
                     //清除所有后成功则跳转
                     root.$router.push({
                         name: 'login'
@@ -47,7 +47,7 @@ export default {
         return {
             navMenuState,
             username,
-            exit
+            logout
         };
     },
 }

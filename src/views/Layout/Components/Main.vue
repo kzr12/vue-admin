@@ -2,7 +2,13 @@
     <div id="main-wrap">
         <div class="main-container">
             <div class="content">
-                <router-view />
+                <!-- 子路由显示区 -->
+                <keep-alive>
+                    <!-- 需要缓冲 -->
+                    <router-view v-if="$route.meta.keepAlive" />
+                </keep-alive>
+                <!-- 不需要缓冲 -->
+                <router-view v-if="!$route.meta.keepAlive" />
             </div>
         </div>
     </div>

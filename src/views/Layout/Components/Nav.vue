@@ -4,7 +4,7 @@
             <img src="../../../assets/logo.png" alt />
         </h1>
         <el-menu
-            default-active="1-4-1"
+            :default-active="defaultActive"
             class="el-menu-vertical-demo"
             :collapse="isCollapse"
             background-color="transparent"
@@ -20,11 +20,13 @@
                         <span slot="title">{{item.meta.name}}</span>
                     </template>
                     <!-- 子级菜单 -->
-                    <el-menu-item
-                        v-for="subItem in item.children"
-                        :key="subItem.id"
-                        :index="subItem.path"
-                    >{{subItem.meta.name}}</el-menu-item>
+                    <template v-for="subItem in item.children">
+                        <el-menu-item
+                            v-if="!subItem.hidden"
+                            :key="subItem.id"
+                            :index="subItem.path"
+                        >{{subItem.meta.name}}</el-menu-item>
+                    </template>
                 </el-submenu>
             </template>
         </el-menu>
@@ -41,7 +43,13 @@ export default {
         //data数据
         // const isCollapse = ref(false);
         const routers = reactive(root.$router.options.routes);
-
+        /**
+         * 监听路由变化
+         */
+        const defaultActive = computed(() => {
+            const route = root.$route;
+            return route.path;
+        })
         /**
          * computer 监听
          */
@@ -55,7 +63,7 @@ export default {
         // console.log(root.$store.getters.count)
         // root.$store.commit('SET_COUNT', 100);
         return {
-            isCollapse,
+            isCollapse, defaultActive,
             routers
         }
     },
@@ -92,7 +100,7 @@ export default {
 .close {
     .el-submenu__title {
         span {
-            display:none;
+            display: none;
         }
     }
     #nav-wrap {
