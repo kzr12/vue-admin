@@ -41,14 +41,7 @@
                 <div class="label-warp key-work">
                     <label for>关键字：&nbsp;&nbsp;</label>
                     <div class="warp-content">
-                        <el-select v-model="search_key" placeholder="请选择" style="width:100%;">
-                            <el-option
-                                v-for="item in tasearch_options"
-                                :key="item.value"
-                                :label="item.label"
-                                :value="item.value"
-                            ></el-option>
-                        </el-select>
+                        <SelectVue :config="data.configOption" />
                     </div>
                 </div>
             </el-col>
@@ -69,14 +62,33 @@
             @selection-change="handleSelectionChange"
         >
             <el-table-column type="selection" width="55"></el-table-column>
-            <el-table-column prop="title" label="标题" width="420"></el-table-column>
+            <el-table-column prop="title" label="标题" width="360"></el-table-column>
             <el-table-column prop="categoryId" label="类型" width="130" :formatter="toCategory"></el-table-column>
-            <el-table-column prop="createDate" label="日期" width="240" :formatter="toDate"></el-table-column>
+            <el-table-column prop="createDate" label="日期" width="200" :formatter="toDate"></el-table-column>
             <el-table-column prop="user" label="管理员" width="115"></el-table-column>
             <el-table-column label="操作">
                 <template slot-scope="scope">
-                    <el-button size="mini" type="success" @click="editInfo(scope.row.id)">编辑</el-button>
-                    <el-button size="mini" type="danger" @click="deleteItem(scope.row.id)">删除</el-button>
+                    <el-button
+                        size="mini"
+                        type="success"
+                        @click="editInfo(scope.row.id)"
+                        v-btnPerm="'info:edit'"
+                        class="hiden-Button"
+                    >编辑</el-button>
+                    <el-button
+                        size="mini"
+                        type="success"
+                        @click="detailed(scope.row)"
+                        v-btnPerm="'info:detailed'"
+                        class="hiden-Button"
+                    >编辑详情</el-button>
+                    <el-button
+                        size="mini"
+                        type="danger"
+                        @click="deleteItem(scope.row.id)"
+                        v-btnPerm="'info:del'"
+                        class="hiden-Button"
+                    >删除</el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -88,6 +100,7 @@
                     icon="el-icon-edit"
                     type="success"
                     @click="dialog_info=true"
+                    v-btnPerm="'info:add'"
                 >添加</el-button>
                 <el-button size="medium" @click="deleteAll">批量删除</el-button>
             </el-col>
@@ -104,7 +117,7 @@
             </el-col>
         </el-row>
         <!-- 新增弹窗 -->
-        <DialogInfo :flag.sync="dialog_info" :category="options.category" />
+        <DialogInfo :flag.sync="dialog_info" :category="options.category" @loadData="getList" />
         <!-- 编辑弹窗 -->
         <DialogInfoEdit
             :flag.sync="dialog_info_edit"
@@ -122,10 +135,11 @@ import DialogInfoEdit from "./dialog/edit";
 import { global } from "../../utils/global_V3.0";
 import { common } from "@/api/common";
 import { timestampTOTime } from "@/utils/common";
-import { reactive, ref, watchEffect, onMounted, watch } from '@vue/composition-api'
+import { reactive, ref, watchEffect, onMounted, watch, onBeforeMount } from '@vue/composition-api'
+import SelectVue from "@c/Select"
 export default {
     name: 'infoIndex',
-    components: { DialogInfo, DialogInfoEdit },//引入子组件
+    components: { DialogInfo, DialogInfoEdit, SelectVue },//引入子组件
     setup(props, { root }) {
         //把global方法 赋给 confirm
         const { str, confirm } = global();
@@ -134,6 +148,12 @@ export default {
         /**
          * data数据
          */
+        const data = reactive({
+            //下拉菜单数据
+            configOption: {
+                init: ["id", "title"],
+            }
+        })
         const category_value = ref('');
         const date_value = ref('');
         const search_key = ref('id');
@@ -195,13 +215,14 @@ export default {
 
         //时间戳转普通时间
         const toDate = ((row, column, cellValue, index) => {
-            return timestampTOTime(row.createDate - 43200)
+            return timestampTOTime(row.createDate)
         })
 
         //table类型转为正常文字显示
         const toCategory = ((row, column, cellValue, index) => {
             let categoryId = row.categoryId;
             let categoryData = options.category.filter(item => item.id == categoryId)[0];
+            if (!categoryData) { return false };
             return categoryData.category_name;
         })
 
@@ -251,6 +272,16 @@ export default {
             dialog_info_edit.value = true;
         })
 
+        //编辑详情按钮
+        const detailed = (data) => {
+            //路由跳转
+            root.$router.push({
+                name: "InfoDetailed",
+                query: {
+                    id: data.id
+                }
+            })
+        }
 
         //搜索按钮
         const search = (() => {
@@ -299,7 +330,7 @@ export default {
         /**
          * 生命周期
          */
-        onMounted(() => {
+        onBeforeMount(() => {
             getInfoCategory();
             getList();
         })
@@ -311,15 +342,15 @@ export default {
             options.category = value;
         })
 
-        
+
 
         return {
             //ref
-            category_value, date_value, search_key, search_keyWork, dialog_info, total, loadingData, dialog_info_edit, exitInfoId,
+            category_value, date_value, search_key, search_keyWork, dialog_info, total, loadingData, dialog_info_edit, exitInfoId, data,
             //reactive
             options, tasearch_options, table_data,
             //methods
-            handleSizeChange, handleCurrentChange, deleteItem, deleteAll, toDate, toCategory, handleSelectionChange, search, editInfo, getList
+            handleSizeChange, handleCurrentChange, deleteItem, deleteAll, toDate, toCategory, handleSelectionChange, search, editInfo, getList, detailed
         }
     }
 }
@@ -337,5 +368,17 @@ export default {
     &.key-work {
         @include labelDom(right, 100, 40);
     }
+}
+button[type="button"] {
+    margin: 0 5px;
+}
+</style>
+
+<style>
+button.hiden-Button {
+    display: none;
+}
+button.show-Button {
+    display: inline-block;
 }
 </style>

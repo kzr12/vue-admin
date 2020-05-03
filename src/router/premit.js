@@ -15,7 +15,28 @@ router.beforeEach((to, from, next) => {
             store.commit("app/SET_USERNAME", '');
             next();
         } else {
-            next();
+            if (store.getters['app/roles'].length === 0) {
+                store.dispatch('permission/getRoles').then(res1 => {
+                    let roles = res1.role;
+                    let button = res1.button;
+                    let btnPerm = res1.btnPerm;
+                    store.commit('app/SET_ROLES',roles);
+                    store.commit('app/SET_BUTTON',btnPerm);
+                    //存储角色
+                    store.dispatch('permission/createRouter', roles).then(res2 => {
+                        let addRouters = store.getters['permission/addRouters']
+                        let allRouter = store.getters['permission/allRouter']
+                        //路由更新
+                        router.options.routes = allRouter;
+                        //添加动态路由
+                        router.addRoutes(addRouters)
+                        next({ ...to, replace: true })//replace:true 不被历史记录
+                    })
+                });
+            } else {
+                next();
+            }
+
         }
     } else {
         //token不存在

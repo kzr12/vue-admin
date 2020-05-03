@@ -108,8 +108,10 @@ export default {
                 //添加成功弹窗
                 root.$message.success(res.data.message);
                 data.submitLoading = false;
-                //重置表单
-                resetForm();
+                //关闭弹窗
+                close();
+                //回调父级数据
+               emit('loadData'); 
             }).catch(err => {
                 data.submitLoading = false;
             })
